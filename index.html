@@ -81,23 +81,12 @@ h1{font-size:clamp(2.6rem,6.4vw,4.6rem);line-height:1.04;margin:22px 0 24px}
 .ex ul{padding-left:18px;color:var(--dim);font-size:.9rem}.ex li{margin-bottom:6px}
 @media(max-width:640px){.ex{grid-template-columns:1fr;gap:8px}}
 .certs{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:40px}
-.ct{display:flex;gap:16px;padding:18px 20px;border:1px solid var(--line);background:var(--panel);border-radius:3px;width:100%;text-align:left;color:inherit;font:inherit;cursor:pointer;transition:.2s}
+.ct{text-decoration:none;display:flex;gap:16px;padding:18px 20px;border:1px solid var(--line);background:var(--panel);border-radius:3px;width:100%;text-align:left;color:inherit;font:inherit;cursor:pointer;transition:.2s}
 .ct:hover{border-color:var(--blue);transform:translateY(-2px)}
 .ct em{font:normal .65rem var(--mono);color:var(--faint);padding-top:3px}
 .ct b{font:500 .95rem var(--head);display:block}.ct small{display:block;font:.62rem var(--mono);color:var(--blue);letter-spacing:.08em;margin:4px 0 6px}.ct span{font-size:.8rem;color:var(--dim);line-height:1.5;display:block}
 .ct u{display:block;margin-top:10px;text-decoration:none;font:.62rem var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--green)}
 @media(max-width:720px){.certs{grid-template-columns:1fr}}
-.mo{position:fixed;inset:0;z-index:50;background:rgba(2,4,8,.88);display:flex;align-items:center;justify-content:center;padding:20px;padding-top:calc(20px + env(safe-area-inset-top,0px));padding-bottom:calc(20px + env(safe-area-inset-bottom,0px))}
-.mo[hidden]{display:none}
-.mb{width:100%;max-width:900px;max-height:100%;display:flex;flex-direction:column;background:var(--panel);border:1px solid var(--line);border-radius:4px;overflow:hidden}
-.mh{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:14px 18px;border-bottom:1px solid var(--line)}
-.mh b{font:500 .95rem var(--head)}.mh small{display:block;font:.62rem var(--mono);color:var(--blue);letter-spacing:.08em}
-.mh .x{background:none;border:1px solid var(--line);color:var(--text);width:34px;height:34px;border-radius:2px;cursor:pointer;font-size:1.1rem}
-.mh .x:hover{border-color:var(--blue);color:var(--blue)}
-.mv{flex:1;min-height:0;overflow:auto;background:#060b13;display:flex;align-items:center;justify-content:center}
-.mv img{max-width:100%;max-height:78vh;display:block}
-.mv iframe{width:100%;height:78vh;border:0;background:#fff}
-.mf{padding:12px 18px;border-top:1px solid var(--line);font:.7rem var(--mono);letter-spacing:.08em}
 .mf a{color:var(--blue)}
 .ctc{background:#0a121c}
 .cg{text-align:center;display:flex;flex-direction:column;align-items:center;padding-top:40px;padding-bottom:40px}
@@ -178,14 +167,6 @@ footer .w{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
 
 <footer><div class="w"><span>© 2026 Khalid Patrawala</span><span>Learning, Building, Evolving</span><a href="#top">Back to top ↑</a></div></footer>
 
-<!-- Certificate viewer -->
-<div class="mo" id="mo" hidden role="dialog" aria-modal="true" aria-labelledby="mt">
-<div class="mb">
-<div class="mh"><div><b id="mt"></b><small id="ms"></small></div><button class="x" id="mx" type="button" aria-label="Close">✕</button></div>
-<div class="mv" id="mv"></div>
-<div class="mf"><a id="mopen" href="#" target="_blank" rel="noopener">Open in new tab ↗</a></div>
-</div></div>
-
 <script>
 var W=["Data Analyst","Software Engineer","AI Engineer","Machine Learning","NLP &amp; RAG","Backend Engineering"];
 document.getElementById('strip').innerHTML=W.map(function(x,i){return (i?'<i>✳</i>':'')+'<span>'+x+'</span>'}).join('');
@@ -218,22 +199,9 @@ var C=[["Data Analyst Associate — Power BI","Microsoft","Preparing, modeling, 
 ["Advanced Software Engineering","Walmart · Forage","Software engineering tasks in a simulated engineering team.","certificates/walmart-software-engineering.pdf"],
 ["Software Engineering","JP Morgan Chase &amp; Co. · Forage","Software engineering tasks in a simulated fintech team.","certificates/jpmorgan-software-engineering.pdf"],
 ["Software Engineering","Quantium · Forage","Software engineering tasks in a simulated analytics-company team.","certificates/quantium-software-engineering.pdf"],
-["Software Engineering","Accenture · Forage","Software engineering tasks in a simulated consulting-technology team.","certificates/accenture-software-engineering.pdf"],
-["Introduction to Python","Coursera","Core Python fundamentals: data types, control flow, and functions.","certificates/coursera-python.pdf"]];
+["Software Engineering","Accenture · Forage","Software engineering tasks in a simulated consulting-technology team.","certificates/accenture-software-engineering.pdf"]];
 
-document.getElementById('certs').innerHTML=C.map(function(c,i){return '<button type="button" class="ct" data-i="'+i+'"><em>'+(i<9?'0':'')+(i+1)+'</em><div><b>'+c[0]+'</b><small>'+c[1]+'</small><span>'+c[2]+'</span><u>View certificate ↗</u></div></button>'}).join('');
-
-var mo=document.getElementById('mo'),mv=document.getElementById('mv'),lastBtn=null;
-function openCert(i,btn){var c=C[i],f=c[3],isPdf=/\.pdf$/i.test(f);lastBtn=btn;
-document.getElementById('mt').innerHTML=c[0];document.getElementById('ms').innerHTML=c[1];
-document.getElementById('mopen').href=f;
-mv.innerHTML=isPdf?'<iframe src="'+f+'" title="Certificate"></iframe>':'<img src="'+f+'" alt="Certificate: '+c[0].replace(/"/g,'')+'">';
-mo.hidden=false;document.body.style.overflow='hidden';document.getElementById('mx').focus()}
-function closeCert(){mo.hidden=true;mv.innerHTML='';document.body.style.overflow='';if(lastBtn)lastBtn.focus()}
-document.getElementById('certs').addEventListener('click',function(e){var b=e.target.closest('.ct');if(b)openCert(+b.dataset.i,b)});
-document.getElementById('mx').onclick=closeCert;
-mo.addEventListener('click',function(e){if(e.target===mo)closeCert()});
-document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!mo.hidden)closeCert()});
+document.getElementById('certs').innerHTML=C.map(function(c,i){return '<a class="ct" href="'+c[3]+'" target="_blank" rel="noopener"><em>'+(i<9?'0':'')+(i+1)+'</em><div><b>'+c[0]+'</b><small>'+c[1]+'</small><span>'+c[2]+'</span><u>View certificate ↗</u></div></a>'}).join('');
 
 </script>
 </body>
